@@ -1,6 +1,22 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { signInWithGoogle } from '../utils/firebase';
 
-const WelcomeScreen = ({ onStart }) => {
+const WelcomeScreen = ({ onStart, onLogin }) => {
+    const [isLoading, setIsLoading] = useState(false);
+
+    const handleGoogleLogin = async () => {
+        setIsLoading(true);
+        try {
+            const user = await signInWithGoogle();
+            if (user && onLogin) {
+                await onLogin(user);
+            }
+        } catch (error) {
+            console.error("Login failed", error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
     return (
         <div className="welcome-screen">
             <div className="welcome-icon">🌸</div>
@@ -43,9 +59,24 @@ const WelcomeScreen = ({ onStart }) => {
                 </ul>
             </div>
 
-            <button className="btn btn-primary" onClick={onStart}>
-                ✨ Start My Journey
-            </button>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', width: '100%', maxWidth: '320px' }}>
+                <button
+                    className="btn btn-primary btn-full"
+                    onClick={onStart}
+                    disabled={isLoading}
+                >
+                    ✨ Start Locally Only
+                </button>
+
+                <button
+                    className="btn btn-secondary btn-full"
+                    onClick={handleGoogleLogin}
+                    disabled={isLoading}
+                    style={{ background: 'white' }}
+                >
+                    {isLoading ? '⏳ Connecting...' : '🔑 Sign In with Google (Cross-Device Sync)'}
+                </button>
+            </div>
 
             <p style={{
                 fontSize: '0.72rem',

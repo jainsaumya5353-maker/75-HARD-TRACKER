@@ -12,12 +12,30 @@ const getDefaultState = () => ({
     weeklyHabits: {},
     notes: {},
     weeklyReflections: {},
-    isActive: false,
     completedChallenge: false,
 });
 
-export const loadState = () => {
+let currentUserId = null;
+
+export const setUserId = (id) => {
+    currentUserId = id;
+};
+
+export const loadState = async (userId = null) => {
     try {
+        if (userId) {
+            const { db } = await import('./firebase');
+            const { doc, getDoc } = await import('firebase/firestore');
+            const docSnap = await getDoc(doc(db, 'users', userId));
+            if (docSnap.exists() && docSnap.data().state) {
+                const firebaseState = docSnap.data().state;
+                try {
+                    localStorage.setItem(STORAGE_KEY, JSON.stringify(firebaseState));
+                } catch (e) { }
+                return firebaseState;
+            }
+        }
+
         const data = localStorage.getItem(STORAGE_KEY);
         if (!data) return getDefaultState();
         return JSON.parse(data);
@@ -29,12 +47,21 @@ export const loadState = () => {
 export const saveState = (state) => {
     try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+
+        if (currentUserId) {
+            import('./firebase').then(({ db }) => {
+                import('firebase/firestore').then(({ doc, setDoc }) => {
+                    setDoc(doc(db, 'users', currentUserId), { state, lastUpdated: new Date() }, { merge: true })
+                        .catch(e => console.error("Firebase sync failed:", e));
+                });
+            });
+        }
     } catch (e) {
         console.error('Failed to save state:', e);
     }
 };
 
-export const resetChallenge = (state) => {
+export const resetChallenge = (state, userId = null) => {
     const newState = {
         ...getDefaultState(),
         totalRestarts: state.totalRestarts + 1,
