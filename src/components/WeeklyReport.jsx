@@ -13,13 +13,13 @@ import {
     Filler,
 } from 'chart.js';
 import { DAILY_HABITS, TOTAL_DAYS } from '../utils/constants';
-import { getCurrentDayNumber, getDayKey, getWeekNumber, formatDateShort, getDateForDay } from '../utils/storage';
+import { getCurrentDayNumber, getDayKey, getWeekNumber, formatDateShort, getDateForDay, getLogicalDate } from '../utils/storage';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, Title, Tooltip, Legend, Filler);
 
 const WeeklyReport = ({ state }) => {
     const currentDay = getCurrentDayNumber(state.challengeStartDate);
-    const currentWeek = getWeekNumber(state.challengeStartDate, new Date());
+    const currentWeek = getWeekNumber(state.challengeStartDate, getLogicalDate());
 
     const weeklyData = useMemo(() => {
         const weeks = [];

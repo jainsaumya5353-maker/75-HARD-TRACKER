@@ -15,8 +15,10 @@ export const DAILY_HABITS = [
     { id: 'no_sugar', label: 'No sugar', emoji: '🍬', category: 'diet' },
     { id: 'no_outside_food', label: 'No outside food', emoji: '🏠', category: 'diet' },
     { id: 'water_3l', label: 'Drink 3 liters of water', emoji: '💧', category: 'health' },
+    { id: 'exercise_daily', label: 'Exercise', emoji: '💪', category: 'fitness' },
     { id: 'no_screen_morning', label: 'No screen 30 mins after waking', emoji: '📵', category: 'wellness' },
     { id: 'read_5pages', label: 'Read 5 pages', emoji: '📖', category: 'growth' },
+    { id: 'post_twitter', label: 'Post on Twitter', emoji: '🐦', category: 'content' },
 ];
 
 export const WEEKLY_HABITS = [

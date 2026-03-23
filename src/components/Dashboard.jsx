@@ -18,6 +18,7 @@ import {
     formatDate,
     getCurrentDayNumber,
     getDateForDay,
+    getLogicalDate,
 } from '../utils/storage';
 
 const Dashboard = ({ state, setState }) => {
@@ -197,7 +198,7 @@ const Dashboard = ({ state, setState }) => {
                 totalRestarts: prev.totalRestarts + 1,
                 longestStreak: Math.max(prev.longestStreak, prev.currentStreak),
                 currentStreak: 0,
-                challengeStartDate: new Date().toISOString().split('T')[0],
+                challengeStartDate: getLogicalDate().toISOString().split('T')[0],
                 days: {},
                 weeklyHabits: {},
                 notes: {},

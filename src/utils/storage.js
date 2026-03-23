@@ -61,20 +61,27 @@ export const saveState = (state) => {
     }
 };
 
+// Offset current time by 2 hours so days rollover at 2 AM
+export const getLogicalDate = () => {
+    const d = new Date();
+    d.setHours(d.getHours() - 2);
+    return d;
+};
+
 export const resetChallenge = (state, userId = null) => {
     const newState = {
         ...getDefaultState(),
         totalRestarts: state.totalRestarts + 1,
         longestStreak: Math.max(state.longestStreak, state.currentStreak),
         isActive: true,
-        challengeStartDate: new Date().toISOString().split('T')[0],
+        challengeStartDate: getLogicalDate().toISOString().split('T')[0],
     };
     saveState(newState);
     return newState;
 };
 
 export const startChallenge = () => {
-    const tomorrow = new Date();
+    const tomorrow = getLogicalDate();
     tomorrow.setDate(tomorrow.getDate() + 1);
     const state = {
         ...getDefaultState(),
@@ -95,7 +102,7 @@ export const getCurrentDayNumber = (startDate) => {
     if (!startDate) return 0;
     const start = new Date(startDate);
     start.setHours(0, 0, 0, 0);
-    const today = new Date();
+    const today = getLogicalDate();
     today.setHours(0, 0, 0, 0);
     const diff = Math.floor((today - start) / (1000 * 60 * 60 * 24));
     return Math.max(1, diff + 1);
