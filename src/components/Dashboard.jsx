@@ -401,6 +401,19 @@ const Dashboard = ({ state, setState }) => {
                 </button>
             )}
 
+            {/* Manual Hard Reset */}
+            <button
+                className="btn btn-danger btn-full"
+                onClick={() => {
+                    if (window.confirm("⚠️ Are you sure you want to completely erase all progress and restart the challenge from tomorrow?")) {
+                        handleReset();
+                    }
+                }}
+                style={{ marginBottom: 16, background: 'transparent', border: '1px solid var(--pink-300)', color: 'var(--pink-500)' }}
+            >
+                🔄 Restart Challenge (Start completely fresh)
+            </button>
+
             {/* Save Indicator */}
             {showSaveIndicator && (
                 <div className="save-indicator">✓ Saved automatically</div>
